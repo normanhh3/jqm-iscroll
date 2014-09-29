@@ -1,3 +1,7 @@
+/**
+See this blog post for more details on this particular chat bubble implementation.
+www.rwe-uk.com/blog/.../ichat_like_speech_bubbles_with_css_3/
+**/
 .bubbledLeft,.bubbledRight{
 	position: relative;
 	margin-top: 3px;
