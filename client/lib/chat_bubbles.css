@@ -1,0 +1,52 @@
+.bubbledLeft,.bubbledRight{
+	position: relative;
+	margin-top: 3px;
+	max-width: 70%;
+	clear: both;
+}
+
+.bubbledLeft{
+	float: left;
+	margin-right: auto;
+	padding: 4px 10px 4px 15px; /*position within the border*/
+}
+
+.bubbledLeft:before{
+	z-index: -1;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	content: "";
+
+	border-width: 8px 10px 8px 17px; 
+	border-image: url(/images/chat_bubbles/speech_bubble_left_2.png) 8 10 8 17 stretch stretch;
+	-webkit-border-image: url(/images/chat_bubbles/speech_bubble_left_2.png) 8 10 8 17 stretch stretch;
+	-moz-border-image: url(/images/chat_bubbles/speech_bubble_left_2.png) 8 10 8 17 stretch stretch;
+	-o-border-image: url(/images/chat_bubbles/speech_bubble_left_2.png) 8 10 8 17 stretch stretch;
+}
+
+.bubbledRight{
+	float: right;
+	margin-left: auto;
+	text-align: right;
+
+	padding: 4px 15px 4px 10px; /*position within the border*/
+}
+
+.bubbledRight:before{
+	z-index: -1;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	content: "";
+
+	border-width: 8px 17px 8px 10px; 
+	border-image: url(/images/chat_bubbles/speech_bubble_right_2.png) 8 17 8 10 stretch stretch ;
+	-webkit-border-image: url(/images/chat_bubbles/speech_bubble_right_2.png) 8 17 8 10 stretch stretch ;
+	-moz-border-image: url(/images/chat_bubbles/speech_bubble_right_2.png) 8 17 8 10 stretch stretch ;
+	-o-border-image: url(/images/chat_bubbles/speech_bubble_right_2.png) 8 17 8 10 stretch stretch ;
+}

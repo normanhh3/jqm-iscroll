@@ -1,0 +1,6 @@
+{
+	"packages": { "bower": {} },
+	"bower": {
+		"machina": "0.4.0-1"
+	}
+}

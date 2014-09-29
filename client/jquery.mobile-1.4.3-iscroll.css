@@ -1,0 +1,74 @@
+.iscroll-wrapper {
+	left: 9999px; /* Initially hide the content to better control the display of it. */
+
+	/* Prevent native touch events on Windows */
+	-ms-touch-action: none;
+
+	/* Prevent the callout on tap-hold and text selection */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	/* Prevent text resize on orientation change, useful for web-apps */
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+/**
+The following section is a performance enhancement for iscroll scrolling inside JQM according to the blog post here: 
+http://dibranmulder.blogspot.com/2013/11/android-jquery-mobile-listview-scroll.html
+
+Useful links:
+	Orginal lead for solving the problem:
+	http://stackoverflow.com/questions/9006278/jquery-mobile-listview-is-too-slow-with-iscroll
+
+JSfiddle POC:
+	http://jsfiddle.net/SuY7f/1/
+
+More background information:
+	http://stackoverflow.com/questions/12228053/what-does-usetransform-and-usetransition-options-from-iscroll-do
+	http://cubiq.org/you-shall-not-flicker
+**/
+.iscroll-wrapper li {
+	-webkit-transform : translateZ(0);  
+	-moz-transform : translateZ(0); 
+	-ms-transform: translateZ(0);
+	-o-transform : translateZ(0);
+	transform : translateZ(0);
+}
+
+.iscroll-scroller {
+	/* Prevent elements to be highlighted on tap */
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+	/* Put the scroller into the HW Compositing layer right from the start */
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
+.iscroll-pullDown {overflow: hidden;}
+.iscroll-pullDownLabel, .iscroll-pullUpLabel {color:#999}
+.iscroll-pullDown, .iscroll-pullUp {background:#fff;height:40px;line-height:40px;font-weight:bold;font-size:0.8em;color:#888}
+.iscroll-pullDown .iscroll-pullDownIcon, .iscroll-pullUp .iscroll-pullUpIcon {display:block;float:left;opacity:0.4;width:40px;height:40px;background:url(/images/iscroll/pull_to_refresh.png) 0 0 no-repeat;-webkit-background-size:40px 80px;-ms-background-size:40px 80px; background-size:40px 80px;-webkit-transition-property:-webkit-transform;-ms-transition-property:-webkit-transform;-webkit-transition-duration:250ms;-ms-transition-duration:250ms}
+.iscroll-pullDown .iscroll-pullDownIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+.iscroll-pullUp .iscroll-pullUpIcon  {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+.iscroll-pullDown.flip .iscroll-pullDownIcon {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+.iscroll-pullUp.flip .iscroll-pullUpIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+.iscroll-pullDown.loading .iscroll-pullDownIcon, .iscroll-pullUp.loading .iscroll-pullUpIcon {background-position:0 100%;-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0);-webkit-transition-duration:0ms;-ms-transition-duration:0ms;-webkit-animation-name:loading;-ms-animation-name:loading;-webkit-animation-duration:1s;-ms-animation-duration:1s;-webkit-animation-iteration-count:infinite;-ms-animation-iteration-count:infinite;-webkit-animation-timing-function:linear;-ms-animation-timing-function:linear}
+
+@-webkit-keyframes loading {
+	from {-webkit-transform:rotate(0deg) translateZ(0)}
+	to {-webkit-transform:rotate(360deg) translateZ(0)}
+}
+@-ms-keyframes loading {
+	from {-ms-transform:rotate(0deg) translateZ(0)}
+	to {-ms-transform:rotate(360deg) translateZ(0)}
+}
