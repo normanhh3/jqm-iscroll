@@ -304,6 +304,7 @@ $.widget('mobile.iscroll', {
                     // setting bottom and top means that the height is managed by the browser
                     bottom: footerHeight,
                     top: headerHeight,
+                    right: '0px',
                     position: 'absolute'
                 })
                 .parents('.ui-content')
@@ -337,8 +338,6 @@ $.widget('mobile.iscroll', {
         this.scroll.on('scroll',            function(){ wThis._trigger('scroll', null, this);       });
         this.scroll.on('scrollEnd',         function(){ wThis._trigger('end', null, this);          });
         this.scroll.on('flick',             function(){ wThis._trigger('flick', null, this);        });
-        this.scroll.on('zoomStart',         function(){ wThis._trigger('zoomstart', null, this);    });
-        this.scroll.on('zoomEnd',           function(){ wThis._trigger('zoomEnd', null, this);      });
 
         // Step 5) In order to prevent seeing the "pull down to refresh" before the iScoll is trigger - 
         // the wrapper is located at left:-9999px and returned to left:0 after the iScoll is initiated

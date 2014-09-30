@@ -7,18 +7,23 @@
 <div data-role="page" id="home">
 
 	<div data-role="header" data-position="fixed" data-tap-toggle="false" data-fullscreen="false">
-		<h1>Single page</h1>
+		<h1>iScroll for jQuery Mobile 1.4.3</h1>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content"> <!-- ui-content class assignment is required to make the iscroll work in the content section -->
-		<div data-iscroll="true" data-fullscreen="true" data-pulltorefresh-enabled="true" data-infinite="false" data-pulltorefresh-sensitivity="30" id="scroller">
+
+		<!-- 
+		Most options for iscroll (the ones in all lowercase anyway for now) can be set by using data-[iscroll option name] and those options will be passed right along to the iscroll constructor.
+		There are some settings (you can find them in the js file) that configure how the pull-to-refresh functionality works, those need to be prefixed with data-pulltorefresh-[option name].
+		-->
+		<div data-iscroll="true" data-fullscreen="true" data-pulltorefresh-enabled="true" data-infinite="false" data-pulltorefresh-sensitivity="40" id="scroller">
 			<!--
-			*) Padding is just for looks
+			*) Padding restores the padding that is removed by the plugin that is native to jqm
 			*) clear: both is to reset the float and help with calculation of div height
 			*) display: inline-block is required to ensure that height is calculated correctly with the floated elements
 			*) text-shadow: none is just to keep the text readable from the jQM defaults in the bubbles
 			-->
-			<div  style="padding: 20px; clear: both; display: inline-block; text-shadow: none;">
+			<div id="chatBubbles" style="padding: 1em; clear: both; display: inline-block; text-shadow: none;">
 				<p class="bubbledLeft">
 					Aenean fermentum urna non imperdiet pretium. Nulla non tortor non enim accumsan ultrices. Vivamus ipsum leo, sodales non tortor non, dapibus blandit risus. Curabitur bibendum egestas magna eget sodales. Cras volutpat sed dolor vitae pretium. Donec mollis vel mi eu sollicitudin. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent vel vehicula purus. Vivamus quis nisi nec eros ultricies iaculis non non orci. Etiam at congue nisi. Donec nunc ex, mollis varius lorem et, vulputate dignissim lacus.
 				</p>
@@ -41,8 +46,11 @@
 					</div>
 				</div>
 			</div>
+
 			<!--
-			<ul data-role="listview">
+			*) Padding restores the padding that is removed by the plugin that is native to jqm
+			-->
+			<ul id="listview" data-role="listview" style="padding: 1em; display:none;">
 				<li>The first item in the list.</li>
 				<li>The second item in the list.</li>
 				<li>The third item in the list.</li>
@@ -64,12 +72,16 @@
 				<li>The ninteenth item in the list.</li>
 				<li>The twentyth item in the list.</li>
 			</ul>
-			-->
 		</div>
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed" style="text-align: center" data-tap-toggle="false" data-fullscreen="false">
-		<button data-role=inline>Load More Items</button>
+<div data-role="navbar">
+	<ul>
+		<li><a id="btnChatBubbles" href="#" class="ui-btn-active ui-state-persist" onclick="$('#chatBubbles, #listview').toggle(); $('#scroller').iscroll('refresh');">Chat Bubbles Demo</a></li>
+		<li><a id="btnListview" href="#" onclick="$('#chatBubbles, #listview').toggle(); $('#scroller').iscroll('refresh');">Listview Demo</a></li>
+	</ul>
+</div><!-- /navbar -->
 	</div>
 	<!-- /footer -->
 

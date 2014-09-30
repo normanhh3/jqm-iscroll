@@ -1,12 +1,23 @@
+"use strict";
+
 if (Meteor.isClient) {
+  if(Meteor.isCordova) {
+    console.log("Yes, I am a cordova app!");
+  }
+
+
   Meteor.startup(function() {
+    console.log('Meteor.startup was called!');
 
     $('#scroller').on('iscrollpulled', function(ev, d) {
       console.log('making mock asynchronous call');
 
       window.setTimeout(function() {
         var $sc = $('#scroller');
-        $sc.children(':eq(1)').children(':eq(0)').before('<p class="bubbledRight">New item added from refresh!</p>');
+        $sc
+          .children(':eq(1)')
+          .children(':eq(0)')
+          .before('<p class="bubbledRight">New item added from refresh!</p>');
         $sc.iscroll('refresh');
 
         d.deferred.resolve(); 
