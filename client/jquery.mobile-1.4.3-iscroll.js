@@ -246,7 +246,29 @@ $.widget('mobile.iscroll', {
         });
     },
 
+    _setupMethodPassthrough: function() {
+        /**
+        scrollTo: function() {
+            if(this.scroll) {
+                this.scroll.scrollTo.apply(this.scroll, arguments);
+            }
+        }
+        **/
+        var wThis = this;
+
+        $.each(['scrollTo','scrollBy','scrollToElement'], function() {
+            var methodName = this;
+            wThis[methodName] = function() {
+                if(this.scroll) {
+                    this.scroll[methodName].apply(this.scroll, arguments);
+                }
+            }
+        });
+    },
+
     _create: function() {
+        this._setupMethodPassthrough();
+
         var wThis = this;
 
         var $el = $(this.element);
@@ -315,6 +337,22 @@ $.widget('mobile.iscroll', {
                 $wr
                     .find('.iscroll-pullDown')
                     .css({'margin-bottom': '0px', 'padding-bottom': '0px'});
+            }
+
+            if(this.options.pulltorefresh.enabled) {
+                this._delay(function() {
+                        // If the wrapper's height is greater than the scrollers height, make the height 
+                        // at least the current height plus the pulldoown height so that the pull down 
+                        // works properly.
+                        if($wr.outerHeight(true) > $sc.outerHeight(true)) {
+                            $sc.css('height', 
+                                $wr.outerHeight(true) + this.options.pulltorefresh.pullDownHeight + 'px');
+                            this.refresh();
+                            this._resetScrollPosition();
+                        }
+                    }, 
+                    750
+                );
             }
         }
 
