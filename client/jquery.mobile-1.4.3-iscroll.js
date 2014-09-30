@@ -247,13 +247,6 @@ $.widget('mobile.iscroll', {
     },
 
     _setupMethodPassthrough: function() {
-        /**
-        scrollTo: function() {
-            if(this.scroll) {
-                this.scroll.scrollTo.apply(this.scroll, arguments);
-            }
-        }
-        **/
         var wThis = this;
 
         $.each(['scrollTo','scrollBy','scrollToElement'], function() {
@@ -332,6 +325,11 @@ $.widget('mobile.iscroll', {
                 .parents('.ui-content')
                     // Reset default ui-content padding applied by JQM
                     .css({padding: '0px'});
+
+            // apply the 1em of padding that is reset on the ui-content element to all children of the scroller
+            $sc.children()
+                .not('.iscroll-pullDown')
+                .css('padding', '1em');
 
             if(this.options.pulltorefresh.enabled) {
                 $wr
