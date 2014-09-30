@@ -5,6 +5,19 @@ Short Story:
 * Folks over here: https://github.com/cubiq/iscroll/issues/378 were looking for a pull-to-refresh implementation with iScroll 5
 * I combined sources from both places and specifically inspiration from https://github.com/orenagiv and http://pnc.co.il/dev/iscroll-5-pull-to-refresh-and-infinite-demo.html to put together what I have in this repo
 
+Tested On:
+* iPad Mini
+* Nexus 7
+* Moto X
+* Chrome Browser - OS X
+* Safari Browser - OS X
+
+Supported:
+* Orientation Change
+
+Known Issues:
+* TBD
+
 Going Forward:
 * Please submit PR's as I plan to be actively engaged in maintaining this since I have a personal stake in its success.
 * Let me know of your problems but PLEASE create a jsFiddle or host a site somewhere to reproduce your issue.
