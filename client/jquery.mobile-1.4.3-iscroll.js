@@ -215,14 +215,14 @@ $.widget('mobile.iscroll', {
                     wThis.options.pulltorefresh.timeoutHandle = wThis._delay(function() { d.resolve(this); }, wThis.options.pulltorefresh.pulledeventtimeout);
                     wThis._trigger('pulled', null, {deferred: d});
                 } else if (wThis.scroll.y >= (wThis.options.pulltorefresh.pullDownHeight *-1)) {
-                    wThis._resetScrollPosition(200);
+                    wThis._resetScrollPosition();
                 }
             }
         });
     },
 
     _resetScrollPosition: function(delay) {
-        this.scroll.scrollTo(0, this.options.pulltorefresh.pullDownHeight * -1, delay == undefined || delay == null ? 750 : delay);
+        this.scroll.scrollTo(0, this.options.pulltorefresh.pullDownHeight * -1, delay == undefined || delay == null ? 250 : delay);
     },
 
     _attachHandlersInfiniteLoading: function() {
