@@ -24,39 +24,19 @@ if (Meteor.isClient) {
       }, 5500);
     });
 
-    /**
     $('#scroller').on('create', function() {
-      console.log('create of iscroll happened');
-      // assign bubbled classes
+    });
+
+    $('#scroller').on('iscrollcreated', function(){
     });
 
     $('#scroller').on('iscrollstart', function(ev, d){
-      console.log('iscrollstart ev', ev, 'd', d);
-    });
-    **/
-
-    var recalculateHeight = function($this) {
-      $('p:odd', $this).not('.bubbledLeft').addClass('bubbledLeft');
-      $('p:even', $this).not('.bubbledRight').addClass('bubbledRight');
-
-      var height = 0;
-      $this.children().each(function(i, p){
-        height += $(p).outerHeight(true);
-      });
-
-      $this.css('height', height + 'px');
-    };
-
-    $('#scroller').on('iscrollcreated', function(){
-      //recalculateHeight($(this));
     });
 
     $('#scroller').on('iscrollscroll', function(ev, d){
-      console.log('scroll -> y: ', d.y, ' height: ', d.scrollerHeight);
     });
 
     $('#scroller').on('iscrollend', function(ev, d){
-      console.log('scrollend -> y: ', d.y, ' height: ', d.scrollerHeight);
     });
 
     $('#scroller').on('click', function(){

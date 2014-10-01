@@ -1,5 +1,28 @@
 "use strict";
 
+/**
+window.console = {
+    log: function() {
+        $('#listview li:last')
+            .after("<li>" + 
+                $.makeArray($.each(arguments, function() { 
+                    if(typeof(this)==="string") 
+                        return this; 
+                    else
+                        return JSON.stringify(this);
+                })).join('&nbsp;') + "</li>");
+
+        if($('#listview').data('mobileListview')!==undefined) {
+            window.setTimeout(function() {
+                $('#listview').listview('refresh');
+                $('#scroller').iscroll('refresh');    
+            }, 1500);
+        }
+    }
+};
+**/
+
+/**
 function flattenObject(obj, prefix, spacer) {
     var spacer = (spacer==null?'':spacer);
     var prefix = (prefix==null?'':prefix);
@@ -13,6 +36,7 @@ function flattenObject(obj, prefix, spacer) {
         })
     );
 };
+**/
 
 /**
     key: "data-foo"
@@ -61,6 +85,7 @@ function setValueOnKeyUsingPath(key, value, obj, prefix, spacer) {
     return origObj;
 };
 
+/**
 // debouncing function from John Hann
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 var debounce = function (func, threshold, execAsap) {
@@ -82,10 +107,9 @@ var debounce = function (func, threshold, execAsap) {
       timeout = setTimeout(delayed, threshold || 100);
     };
 };
+**/
 
 var preventDefault = function(e) { e.preventDefault(); };
-
-
 
 // TODO: Refactor state management into an FSM using Machina.JS
 
@@ -110,7 +134,7 @@ $.widget('mobile.iscroll', {
             loadinglabel: 'Loading...', 
             pulledeventtimeout: 60000, /** Default timeout of 1 minute **/
             timeoutHandle: -1,
-            sensitivity: 15 /** How many pixels have to be pulled down before the release to refresh is triggered. **/
+            sensitivity: 20 /** How many pixels have to be pulled down before the release to refresh is triggered. **/
         },
         fullscreen: false,
         infinite: true,
@@ -120,6 +144,8 @@ $.widget('mobile.iscroll', {
 
     /** This maintains a reference to the IScroll implementation object. **/
     scroll: null,
+
+    _resettingScrollPosition: false,
     
     _configurePullToRefresh: function() {
         var $el = $(this.element);
@@ -156,19 +182,23 @@ $.widget('mobile.iscroll', {
     _attachHandlersPullToRefresh: function() {
         var wThis = this;
 
+        var $pullDownEl = $('.iscroll-pullDown', this.element);
+
         this.scroll.on('scroll', function() {
-            var $pullDownEl = $('.iscroll-pullDown', this.element);
+            //console.log('scroll -> y: ', this.y, ' sensitivity: ', wThis.options.pulltorefresh.sensitivity, ' y:', this.distY);
+            
+            if(wThis._resettingScrollPosition) {
+                return;
+            }
 
             // if there is NOT already a pulldown event in process
             // if the pulldown distance is greater than the sensitivity setting in pixels
             // if the location of the pulldown is at the top - indicating a true pull down
-            // if the pullDownEl is a valid reference and is not already in progress
+            // if the pullDownEl is not already in the proper state
             // THEN we switch state
             if(
                 wThis.options.pulltorefresh.timeoutHandle < 0 
-                && this.distY > (wThis.options.pulltorefresh.sensitivity + wThis.options.pulltorefresh.pullDownHeight)
-                && this.y <= wThis.options.pulltorefresh.pullDownHeight 
-                && $pullDownEl 
+                && this.y >= wThis.options.pulltorefresh.sensitivity
                 && !$pullDownEl.hasClass('flip')) {
                     $pullDownEl
                         .addClass('flip')
@@ -178,13 +208,13 @@ $.widget('mobile.iscroll', {
         });
 
         this.scroll.on('scrollEnd', function() {
-            // check to see if there is NOT already a refresh in process
-            var $pullDownEl = $('.iscroll-pullDown', this.element);
+            if(wThis._resettingScrollPosition) {
+                wThis._resettingScrollPosition = false;
+                return;
+            }
 
             if(wThis.options.pulltorefresh.timeoutHandle < 0) {
-                $pullDownEl = $('.iscroll-pullDown', this.element);
-
-                // and we are read to trigger a refresh
+                // and we are ready to trigger a refresh
                 if($pullDownEl && $pullDownEl.hasClass('flip') && wThis.options.pulltorefresh.timeoutHandle < 0) {
                     // remove the intermediate up arrow display and replace it with a loading display
                     $pullDownEl
@@ -207,22 +237,28 @@ $.widget('mobile.iscroll', {
                                 .text(wThis.options.pulltorefresh.pulllabel);
 
                         // Just check to see if the current scroll position is near the top, if so, reset the scroll position to the correct top
-                        if(wThis.scroll.y >= -10) {
+                        if(wThis.scroll.y > wThis.options.pulltorefresh.pullDownHeight*-1) {
                             wThis._resetScrollPosition();
                         }
                     });
 
                     wThis.options.pulltorefresh.timeoutHandle = wThis._delay(function() { d.resolve(this); }, wThis.options.pulltorefresh.pulledeventtimeout);
                     wThis._trigger('pulled', null, {deferred: d});
-                } else if (wThis.scroll.y >= (wThis.options.pulltorefresh.pullDownHeight *-1)) {
-                    wThis._resetScrollPosition();
+                } else if (this.y > (wThis.options.pulltorefresh.pullDownHeight *-1)) {
+                    wThis._resetScrollPosition(250);
                 }
             }
         });
     },
 
     _resetScrollPosition: function(delay) {
-        this.scroll.scrollTo(0, this.options.pulltorefresh.pullDownHeight * -1, delay == undefined || delay == null ? 250 : delay);
+        if(!this._resettingScrollPosition) {
+            this._resettingScrollPosition = true;
+            var xPos = this.options.pulltorefresh.pullDownHeight * -1;
+            if(this.scroll.y != xPos) {
+                this.scroll.scrollTo(0, xPos, delay == undefined || delay == null ? 250 : delay);
+            }
+        }
     },
 
     _attachHandlersInfiniteLoading: function() {
@@ -314,6 +350,8 @@ $.widget('mobile.iscroll', {
             var headerHeight = $('[data-role=header][data-position=fixed]').outerHeight(true);
             var footerHeight = $('[data-role=footer][data-position=fixed]').outerHeight(true);
 
+            console.log('fullscreen -> h: ', headerHeight, ' f: ', footerHeight);
+
             $wr
                 .css({
                     // setting bottom and top means that the height is managed by the browser
@@ -335,22 +373,6 @@ $.widget('mobile.iscroll', {
                 $wr
                     .find('.iscroll-pullDown')
                     .css({'margin-bottom': '0px', 'padding-bottom': '0px'});
-            }
-
-            if(this.options.pulltorefresh.enabled) {
-                this._delay(function() {
-                        // If the wrapper's height is greater than the scrollers height, make the height 
-                        // at least the current height plus the pulldoown height so that the pull down 
-                        // works properly.
-                        if($wr.outerHeight(true) > $sc.outerHeight(true)) {
-                            $sc.css('height', 
-                                $wr.outerHeight(true) + this.options.pulltorefresh.pullDownHeight + 'px');
-                            this.refresh();
-                            this._resetScrollPosition();
-                        }
-                    }, 
-                    750
-                );
             }
         }
 
@@ -378,9 +400,23 @@ $.widget('mobile.iscroll', {
         // Step 5) In order to prevent seeing the "pull down to refresh" before the iScoll is trigger - 
         // the wrapper is located at left:-9999px and returned to left:0 after the iScoll is initiated
         this._delay(function() { 
-            $wr.css({left:0}); 
+            $wr.css({left:0});
+
+            if(this.options.pulltorefresh.enabled) {
+                // If the wrapper's height is greater than the scrollers height, make the height 
+                // at least the current height plus the pulldoown height so that the pull down 
+                // works properly.
+                if($wr.outerHeight(true) > $sc.outerHeight(true)) {
+                    $sc.css('height', 
+                        $wr.outerHeight(true) + this.options.pulltorefresh.pullDownHeight + 'px');
+                }
+            }
+
             wThis._trigger('created');
-            this.scroll.refresh();
+            this.refresh().done(function(){
+                console.log('done refreshing now resetting scroll position y: ', wThis.scroll.y);
+                wThis._resetScrollPosition(); 
+            });
         }, 300);
     },
     
@@ -413,15 +449,18 @@ $.widget('mobile.iscroll', {
             this.scroll.destroy();
     },
 
-    _refresh: function() {
+    _refresh: function(d) {
         this.scroll.refresh();
+        d.resolve();
     },
 
     // See http://iscrolljs.com/#refresh for the full details on the refresh of the iscrollpull
     refresh: function() {
+        var d = $.Deferred();
         if(this.scroll) {
-            this._delay(this._refresh, 200);
+            this._delay(function(){this._refresh(d);}, 200);
         }
+        return d;
     }
 });
 
