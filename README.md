@@ -16,7 +16,7 @@ Supported:
 * Orientation Change
 
 Known Issues:
-* TBD
+* iPhone for  iOS 7 & 8 - scrolling of just the jQM page content without scrolling the entire body of the document (which is required to make iscroll work properly) does not cause the address bar and button bar on mobile safari to go away.  This SO article has more details: http://stackoverflow.com/questions/18793072/impossible-to-hide-navigation-bars-in-safari-ios-7-for-iphone-ipod-touch
 
 Going Forward:
 * Please submit PR's as I plan to be actively engaged in maintaining this since I have a personal stake in its success.
