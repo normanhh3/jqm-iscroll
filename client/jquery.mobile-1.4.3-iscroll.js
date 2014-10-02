@@ -410,13 +410,13 @@ $.widget('mobile.iscroll', {
                     $sc.css('height', 
                         $wr.outerHeight(true) + this.options.pulltorefresh.pullDownHeight + 'px');
                 }
+
+                this.refresh().done(function () {
+                    wThis._resetScrollPosition();
+                });
             }
 
             wThis._trigger('created');
-            this.refresh().done(function(){
-                console.log('done refreshing now resetting scroll position y: ', wThis.scroll.y);
-                wThis._resetScrollPosition(); 
-            });
         }, 300);
     },
     
